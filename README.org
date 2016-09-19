@@ -8,6 +8,8 @@
 - [[#idealized-commit-logs---alan-shreve][Idealized Commit Logs - Alan Shreve]]
 
 ** Point-Free or Die: Tacit programming in Haskell and Beyond
+[[https://www.youtube.com/watch?v=seVSlKazsNk&index=20&list=PLcGKfGEEONaDvuLDFFKRfzbsaBuVVXdYa]["Point-Free or Die: Tacit Programming in Haskell and Beyond" by Amar Shah]]
+
  /Point-free style is a tool for tacitneet, and tacitness is a tool for
  comunication/
 
@@ -60,11 +62,9 @@
 
  Tacit code isn't better unless it comunicates better.
 
-
-
-
-
 ** Idealized Commit Logs - Alan Shreve
+
+[[https://www.youtube.com/watch?v=dSqLt8BgbRQ&index=4&list=PLcGKfGEEONaDvuLDFFKRfzbsaBuVVXdYa]["Idealized Commit Logs: Code Simplification via Program Slicing" by Alan Shreve]]
 
  /Code is read much more often than it is written/ - Raymon Chen
 
