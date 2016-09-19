@@ -361,7 +361,7 @@ Papers:
 
 **** Lecture 1.2 - Translation of For
 
-  Scala compiler willtranslate four expressions to combinations of map,
+  Scala compiler will translate for expressions to combinations of map,
   flatMap, and a lazy variant of filter.
 
   #+BEGIN_SRC scala
@@ -374,10 +374,12 @@ Papers:
 
   for (x <- e1; y <- e2; s) yield e3
   e1.flatMap(x => for (y <- e2; s) yield e3) //Translation continues
-
+  #+END_SRC 
+Now we want to transform this expression:
+#+BEGIN_SRC scala 
   for (b <- books; a <- b.authors if a startsWith "Bird")
   yield b.title
-  #+END_SRC 
+#+END_SRC
 
   - Trasnformation 1
   #+BEGIN_SRC scala
@@ -400,8 +402,8 @@ Papers:
 
   This transformation is not limited to lists of sequences, or even
   collections. It is based solely on the presence of the methods
-  ~map,flatMap and withFiler~. This lets you use the ~for~ syntax for
-  your own types as well, with only defining ~map,flatMap and withFiler~
+  ~map, flatMap and withFiler~. This lets you use the ~for~ syntax for
+  your own types as well, with only defining ~map, flatMap and withFiler~
   for these types.
 
 
