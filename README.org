@@ -1,11 +1,11 @@
 * Index
 
-- [[#Strange-Loop][Strange Loop]]
+- [[#strange-loop][Strange Loop]]
 
 * Strange Loop
 
-- [[][Point-Free or Die: Tacit programming in Haskell and Beyond]]
-- [[][Idealized Commit Logs - Alan Shreve]]
+- [[#point-free-or-die-tacit-programming-in-haskell-and-beyond][Point-Free or Die: Tacit programming in Haskell and Beyond]]
+- [[#idealized-commit-logs---alan-shreve][Idealized Commit Logs - Alan Shreve]]
 
 ** Point-Free or Die: Tacit programming in Haskell and Beyond
  /Point-free style is a tool for tacitneet, and tacitness is a tool for
