@@ -1,0 +1,137 @@
+* Index
+
+- [[#Strange-Loop][Strange Loop]]
+
+* Strange Loop
+
+- [[][Point-Free or Die: Tacit programming in Haskell and Beyond]]
+- [[][Idealized Commit Logs - Alan Shreve]]
+
+** Point-Free or Die: Tacit programming in Haskell and Beyond
+ /Point-free style is a tool for tacitneet, and tacitness is a tool for
+ comunication/
+
+ - Calibrate abstraction
+ - Be more expressive
+
+ /outside . inside/ is a composition.
+
+ #+BEGIN_SRC haskell
+ totalNumber = sum . map length
+ #+END_SRC
+
+ Think in a general way when programming. /wholemeal/ programming.
+
+ #+BEGIN_SRC haskell
+
+ totalnumber = aggregate length
+   where aggregate f = sum . map f
+
+ #+END_SRC
+
+ Remove arguments with /eta-reduction/
+
+ #+BEGIN_SRC haskell
+
+ aggregate f = sum . map f
+ aggregate f = (.) sum (map f) -- Infix change
+ aggregate f = (.) sum $ map f
+ aggregate f = (.) sum . map $ f -- As a composition
+ aggregate   = \f -> (.) sum . map $ f -- Annonymous function
+ aggregate   = (.) sum . map
+ aggregate   = (sum .) . map
+
+ \f g -> (f .) . g
+ \f g x y -> f (g x y) -- eta reduced
+
+ #+END_SRC
+
+ /A combinator is a lambda expression that refers only to its
+ arguments/
+
+ Libro: "To Mock a Mockingbird - and other logic puzzles includin an
+ amazing adventure in combinatory logic" - Raymon Smullyan
+
+ /Blackbird is the composition of composition and composition./
+
+
+ 1. Learn /eta-reduction/ to calibrate tacitness
+ 2. Learn /combinators/ to find elegant expressions
+
+ Tacit code isn't better unless it comunicates better.
+
+
+
+
+
+** Idealized Commit Logs - Alan Shreve
+
+ /Code is read much more often than it is written/ - Raymon Chen
+
+ How to understand software:
+ - Documentation
+ - Debugger
+ - Print logs
+ - White boarding boxes + lines
+
+ /An expert computer programmer encodes and processes information
+ semantically, ignoring programming language systanctix details/ -
+ Weiser, 1982
+
+*** Can we build mental models from code faster?
+
+ - Small programs are easy to read and amenable to understand.
+ - Can we reduce a program into a samller, easier-to-read equivalent
+   program?
+
+ Algorithm:
+ 1. Write a test case
+ 2. Run a *code coverage report*
+ 3. Prune all statements not marked by coverage
+ 4. Clean up the AST
+ 5. Write the code back out
+
+ Properties:
+ 1. It compiles.
+ 2. Is passes the test case(s) used to compute it.
+
+*** Program slice
+
+ - Described in 1979 by Mark Weiser
+ - Diferent types of slices:
+   - Forward Slicing
+   - Dynamic slicing
+   - Thin slicing
+   - Observational slicing
+
+ Existing Tools
+ - Indus
+ - Giri
+ - Wala
+ - Frama-C plugin
+ - JSlice
+ - CodeSurfer
+
+*** Idealized Commit Log
+
+ Going from the core structure to a more rich structure with aditional
+ features.
+
+ Algorithm:
+ - Run code coverage for all test cases in a project
+ - Heuristically choose a best ordering of test cases
+ - Then iteratively for each test:
+   - Create Slice from Test0..TestN
+   - Create Slice from Test0..TestN+1
+   - ~diff~ these slices
+
+*** Recap
+
+ - We need more tools to aid reading/undestanding code
+ - Program Slicing can be an effective tool
+   - Reduce large programs into smaller conceptual pieces
+   - Practical Dynamig Slicing by leveragin code-coverage tools
+   - Language independent algorithm
+   - Idealized commit log for iterative mental model building
+
+
