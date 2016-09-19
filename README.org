@@ -6,11 +6,12 @@
 
 - [[#point-free-or-die-tacit-programming-in-haskell-and-beyond][Point-Free or Die: Tacit programming in Haskell and Beyond]]
 - [[#idealized-commit-logs---alan-shreve][Idealized Commit Logs - Alan Shreve]]
+- [[#an-introduction-to-combinator-compilers-and-graph-reduction-machines][An Introduction to Combinator Compilers and Graph Reduction Machines]]
 
 ** Point-Free or Die: Tacit programming in Haskell and Beyond
-[[https://www.youtube.com/watch?v=seVSlKazsNk&index=20&list=PLcGKfGEEONaDvuLDFFKRfzbsaBuVVXdYa]["Point-Free or Die: Tacit Programming in Haskell and Beyond" by Amar Shah]]
+Youtube - [[https://www.youtube.com/watch?v=seVSlKazsNk&index=20&list=PLcGKfGEEONaDvuLDFFKRfzbsaBuVVXdYa]["Point-Free or Die: Tacit Programming in Haskell and Beyond" by Amar Shah]]
 
- /Point-free style is a tool for tacitneet, and tacitness is a tool for
+ /Point-free style is a tool for tacitness, and tacitness is a tool for
  comunication/
 
  - Calibrate abstraction
@@ -51,7 +52,7 @@
  /A combinator is a lambda expression that refers only to its
  arguments/
 
- Libro: "To Mock a Mockingbird - and other logic puzzles includin an
+ Book: "To Mock a Mockingbird - and other logic puzzles including an
  amazing adventure in combinatory logic" - Raymon Smullyan
 
  /Blackbird is the composition of composition and composition./
@@ -64,7 +65,7 @@
 
 ** Idealized Commit Logs - Alan Shreve
 
-[[https://www.youtube.com/watch?v=dSqLt8BgbRQ&index=4&list=PLcGKfGEEONaDvuLDFFKRfzbsaBuVVXdYa]["Idealized Commit Logs: Code Simplification via Program Slicing" by Alan Shreve]]
+Youtube - [[https://www.youtube.com/watch?v=dSqLt8BgbRQ&index=4&list=PLcGKfGEEONaDvuLDFFKRfzbsaBuVVXdYa]["Idealized Commit Logs: Code Simplification via Program Slicing" by Alan Shreve]]
 
  /Code is read much more often than it is written/ - Raymon Chen
 
@@ -133,5 +134,113 @@
    - Practical Dynamig Slicing by leveragin code-coverage tools
    - Language independent algorithm
    - Idealized commit log for iterative mental model building
+
+** An Introduction to Combinator Compilers and Graph Reduction Machines
+
+Youtube -  [[https://www.youtube.com/watch?v=GawiQQCn3bk]["An Introduction to Combinator Compilers and Graph Reduction Machines"
+ by David Graunke]]
+
+[[https://twitter.com/graunked][@graunked]]
+
+
+ Origins and motivation of [[https://en.wikipedia.org/wiki/Functional_programming][Functional Programming]].
+
+ - Graph Reduction Machine :: A virtual machine for functional laguages
+      that works by repeatedly modifying a graph data structure in place.
+ - Combinator Compiler :: A compiler that rewrites functional programs
+      into a version that only uses a reduced set of functions.
+
+ Abstract virtual machine. Rather than a vector of instructions, is a
+ graph of instructions, representing a data structure.
+
+ Graph reduction is model for VM's that's close to the semantics of our
+ high-level language. Using lazy evaluation, currying and pure
+ functions.
+
+ /Computing by Rewriting/
+
+ Evaluate the body of the procedure with each formal parameter replaced
+ by the corresponding argument.
+
+ #+BEGIN_SRC haskell
+
+ (λ x. e)y ⟶ e[x:=y]
+
+ total = sum [1 5 0 5]
+ total = + 1 (sum [5 0 5])
+ total = + 1 (+ 5 (sum [0 5])
+
+ #+END_SRC
+
+ First thing to do in a graph reduction is replace bindings with
+ pointers.
+
+ #+BEGIN_SRC haskell
+
+ foldr op a = f
+   where f nil = a
+         f x:xs = op x (f xs)
+ sum = foldr + 0
+ total = sum [1 5 0 5]
+
+ #+END_SRC
+
+ Then we replace the body.
+
+ #+BEGIN_SRC haskell
+
+ sum = f
+   where f nil = 0
+         f x:xs = + x (f xs)
+
+ #+END_SRC
+
+ And then again with ~total = + 1 ( sum [5 0 5])~
+
+ As we work with rewriting itself and with lazy evaluation, we don't
+ twice the work. [[https://en.wikipedia.org/wiki/Referential_transparency][Referential Transparency]]
+
+ A /point-free/ expression is using combinators to define a function
+ without specifying bound variables. A /Combinator/ is a function
+ without free varialbes that takes functions as argument and returns a
+ function.
+
+ #+BEGIN_SRC haskell
+ f x y = x - y
+ reversed_f = flip f
+ #+END_SRC
+
+ With this combinators, you can define any program:
+
+ #+BEGIN_SRC haskell
+ S f g x = (f x) (g x)
+ K x y   = x
+ I x     = x
+
+ double x = + x x
+ double = (S +) I
+
+ S + I 5      -- S f g x = (f x) (g x)
+ (+ 5) (I 5)  -- I x = x
+ + 5 5
+ #+END_SRC
+
+ This can be done with any function in /lambda calculus/.
+
+ *Mapping to Stick Hardware*
+
+ Using FPGA to run functional code, because in stock hardware it
+ doesn't perform very well.
+
+ - Reduceron
+ - Closure Reduction
+
+Papers:
+
+- [[http://foswiki.cs.uu.nl/foswiki/pub/Cco/CourseResources/new_implementation_technique.pdf]["A New Implementation Technique for Applicative Languages," David Turner, 1979]]
+- [[https://pdfs.semanticscholar.org/e694/49921581f1e00b801994236f840f5b459e00.pdf][Hudak on the state of FP in 1989: "The Conception, Evolution, and  Application of Functional Programming Languages," ]]
+- [[https://www.doc.ic.ac.uk/~wl/icprojects/papers/reduceron08.pdf][Reduceron Paper, 2008, Matthew Naylor and Colin Runciman]]
+- [[https://arxiv.org/pdf/1404.0076.pdf]["Towards a GPU-based implementation of interaction nets"]]
+- [[https://www.dcc.fc.up.pt/~pbv/aulas/linguagens/peytonjones92implementing.pdf]["Implementing Functional Languages on Stock Hardware", Simon Peyton-Jones, 1992]]
 
 
