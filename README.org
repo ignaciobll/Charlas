@@ -1,6 +1,7 @@
 * Index
 
 - [[#strange-loop][Strange Loop]]
+- [[#coursera][Coursera]]
 
 * Strange Loop
 
@@ -244,3 +245,164 @@ Papers:
 - [[https://www.dcc.fc.up.pt/~pbv/aulas/linguagens/peytonjones92implementing.pdf]["Implementing Functional Languages on Stock Hardware", Simon Peyton-Jones, 1992]]
 
 
+* Coursera
+
+- [[functional-program-design-in-scala][Functional Program Design in Scala]]
+
+** Functional Program Design in Scala
+- [[#week-1---for-expressions-and-monads][Week 1 - For expressions and Monads]]
+
+*** Week 1 - For expressions and Monads
+**** Recap: Collections
+***** Collections
+   - Interable
+     - Seq
+       * IndexedSeq
+	 + Vector
+       * LinearSeq
+	 + List
+     - Set
+     - Map
+***** Collection Methods
+   #+BEGIN_SRC scala
+   map
+   flatmap
+   filter
+
+   foldLeft
+   foldRight
+   #+END_SRC
+
+   - Idealized implementation of ~map~ on Lists
+
+   #+BEGIN_SRC scala
+   abstract class List[+T] {
+  
+     def map[U](f: T => U): List[U] = this match {
+       case x :: xs => f(x) :: xs.map(f)
+       case Nil => Nil
+     }
+   }
+   #+END_SRC
+
+   - Idealized Implementation of ~flatMap~ on Lists
+
+   #+BEGIN_SRC scala
+   abstract class List[+T] {
+
+     def flatMap[U](f: T => List[U]): List[U] = this match {
+       case x :: xs => f(x) ++ xs.flatMap(f)
+       case Nil => Nil
+     }
+   }
+   #+END_SRC
+
+   - Idealized Implementation of `filter` on Lists
+
+   #+BEGIN_SRC scala
+   abstract class List[+T] {
+
+     def filter(p: T => Boolean): List[T] = this match {
+       case x :: xs =>
+	 if (p(x)) x :: xs.filter(p) else xs.filter(p)
+       case Nil => Nil
+     }
+   }
+   #+END_SRC
+
+   In practice, the implementation and type of these methods are
+   different in order to:
+   - make them apply to arbitrary collections, not just lists.
+   - make them tail-recursive on lists.
+
+***** For-Expression
+
+   Simplify combinations of core methods ~map, flatmap, filter~
+
+   #+BEGIN_SRC scala
+   for {
+     i <- 1 until n
+     j <- 1 until i
+     if isPrime (i + j)
+   } yield (i,j)
+   #+END_SRC
+
+   The Scala compiler translates for-expressions in terms of ~map,
+   flatmap, filter~.
+
+   #+BEGIN_SRC scala
+   for (x <- e1) yield e2  //for-expression
+   e1.map(x => e2)         //Translated
+
+   for (x <- e1 if f; s) yield e2  // f is a filter and s is a sequence of generators
+   for (x <- e1.withFilter(x => f); s) yield e2
+
+   for (x <- e1; y <- e2; s) yield e3
+   e1.flatMap(x => for (y <- e2; s) yield e3)
+   #+END_SRC
+
+**** Lecture 1.1 - Queries with for
+  #+BEGIN_SRC scala
+
+  for (b <- books; a <- b.authos if a startsWith "Bird,")
+  yield b.title
+
+  { for {
+      b1 <- books
+      b2 <- books
+      if b1.title < b2.title
+      a1 <- b1.authors
+      a2 <- b2.authors
+      if a1 == a2
+    } yield a1
+  }.distinct
+
+  #+END_SRC
+
+**** Lecture 1.2 - Translation of For
+
+  Scala compiler willtranslate four expressions to combinations of map,
+  flatMap, and a lazy variant of filter.
+
+  #+BEGIN_SRC scala
+
+  for (x <- e1) yield e2
+  e1.map(x => e2)
+
+  for (x <- e1 if f; s) yield e2
+  for (x <- e1.withFilter(x => f); s) yield e2
+
+  for (x <- e1; y <- e2; s) yield e3
+  e1.flatMap(x => for (y <- e2; s) yield e3) //Translation continues
+
+  for (b <- books; a <- b.authors if a startsWith "Bird")
+  yield b.title
+  #+END_SRC 
+
+  - Trasnformation 1
+  #+BEGIN_SRC scala
+  books.flatMap(b => 
+    for (a <- b.authors if a startsWith "Bird")
+  ) yield b.title
+  #+END_SRC
+  - Transformation 2
+  #+BEGIN_SRC scala
+  books.flatMap(b => 
+    for (a <- b.authors.withFilter(a => a startsWith "Bird"))
+  ) yield b.title
+  #+END_SRC
+  - Transformation 3
+  #+BEGIN_SRC scala
+  books.flatMap(b =>
+    b.authors.withFilter(a => a startsWith "Bird").map(y => y.title)
+  )
+  #+END_SRC
+
+  This transformation is not limited to lists of sequences, or even
+  collections. It is based solely on the presence of the methods
+  ~map,flatMap and withFiler~. This lets you use the ~for~ syntax for
+  your own types as well, with only defining ~map,flatMap and withFiler~
+  for these types.
+
+
+  Useful for arrays, iterators, databases...
