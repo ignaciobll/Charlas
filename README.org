@@ -54,7 +54,7 @@ Youtube - [[https://www.youtube.com/watch?v=seVSlKazsNk&index=20&list=PLcGKfGEEO
  arguments/
 
  Book: "To Mock a Mockingbird - and other logic puzzles including an
- amazing adventure in combinatory logic" - Raymon Smullyan
+ amazing adventure in combinatory logic" - Raymon Smullyan [[http://douxnet.weebly.com/uploads/2/0/4/1/20418601/raymond_m._smullyan-to_mock_a_mockingbird_and_other_logic_puzzles__including__an_amazing_adventure_in_combinatory_logic-knopf_1985.pdf][PDF]]
 
  /Blackbird is the composition of composition and composition./
 
