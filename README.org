@@ -247,12 +247,16 @@ Papers:
 
 * Coursera
 
-- [[functional-program-design-in-scala][Functional Program Design in Scala]]
+- [[#functional-program-design-in-scala][Functional Program Design in Scala]]
 
 ** Functional Program Design in Scala
 - [[#week-1---for-expressions-and-monads][Week 1 - For expressions and Monads]]
 
 *** Week 1 - For expressions and Monads
+
+- [[#lecture-1.1---queries-with-for][Lecture 1.1 - Queries with for]]
+- [[#lecture-1.2---translation-of-for][Lecture 1.2 - Translation of For]]
+
 **** Recap: Collections
 ***** Collections
    - Interable
