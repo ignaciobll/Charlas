@@ -2,6 +2,7 @@
 
 - [[#strange-loop][Strange Loop]]
 - [[#coursera][Coursera]]
+- [[#compose-conference][Compose Conference]]
 
 * Strange Loop
 
@@ -412,3 +413,88 @@ Now we want to transform this expression:
 
 
   Useful for arrays, iterators, databases...
+
+* Compose Conference
+
+- [[#practical-programming-in-an-exception-free-world][Practical Programming in an Exception Free World]]
+
+** Practical Programming in an Exception Free World
+
+Youtube - [[https://www.youtube.com/watch?v=7WTM53u09Pk][Sharon Holliday - Practical Programming in an Exception Free World]]
+
+Sharon's universal code metri: /How many coffee per LOC?/
+
+:coffee: -> :heart-eyes:
+:coffee: :coffee: :coffee: -> :angry:
+
+*** Why avoid exceptions?
+
+/Exceptions break referential transparency/. But this is not useful in
+real world.
+
+#+BEGIN_SRC scala
+
+def findMaxAge(ages: Vector[Int]):String = {
+  s"The maximum age is ${ages.max}"
+}
+
+#+END_SRC
+
+If the vector is empty, it will throw an exception, and nothings is
+telling me that.
+
+#+BEGIN_SRC scala
+
+def maxAge(ages: Vector[Int]): Try[Int] = {
+  Try{ages.max}
+}
+
+#+END_SRC
+
+~Try[A~ can return a /Failure/ or a /Success/
+
+But this is creating exceptions. Another solution is creating our own error
+class.
+
+#+BEGIN_SRC scala
+case class AppError(message: String, throwable: Option[Throwable] = None)
+#+END_SRC
+
+And using /scalaZ/ disjuntion to give us our return type:
+
+~type ErrorOr[A] = AppError \/ A~ which means: or AppError or A
+
+#+BEGIN_SRC scala
+def maxAge(ages: Vector[Int]): ErrorOr[Int] = {
+  if (ages.isEmpty) {
+    -\/(AppError("Ages vector is empty"))
+  } else {
+    AppTry{ages.max}
+  }
+}
+#+END_SRC
+
+*** So how do we handle error situations?
+
+/Scala's Either is ot right biased. The ScalaZ disjunction comes with
+type-class instances for Functor, Monad, Applicative and more/
+
+Type-classes -- A mental model
+
+~\/~ has a Functor instance that can add methods to our class (and
+Monads, Applicatives, Traversable...)
+
+*** Real world example
+
+~case class Agent(id: Int, name:String)~
+~case class Property(id: Int, description: String, agentId: Int)~
+
+[[https://youtu.be/7WTM53u09Pk?t=13m57s][Part of video explaining Real World Examples]]
+
+We could have done the same thing with Futures, Options, FreeMonads...
+
+- [[http://pdf.th7.cn/down/files/1312/Functional%20Programming%20in%20Scala.pdf][FP in Scala - Paul Chiusano and Runar Bjarnason]]
+- "Cats" library documentation
+  - [[http://typelevel.org/cats/index.html]]
+
+:coffee::coffee::coffee::coffee::coffee::coffee::coffee::coffee:
